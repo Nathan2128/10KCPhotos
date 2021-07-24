@@ -1,0 +1,14 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$tenk-photo-app-primary: mat-palette($mat-blue-gray, 500);
+$tenk-photo-app-accent:  mat-palette($mat-indigo, 100);
+
+// The warn palette is optional (defaults to red).
+$tenk-photo-app-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$tenk-photo-app-theme: mat-light-theme($tenk-photo-app-primary, $tenk-photo-app-accent, $tenk-photo-app-warn);
+
+@include angular-material-theme($tenk-photo-app-theme);
