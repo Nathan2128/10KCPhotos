@@ -1,7 +1,11 @@
 .photo-card {
-    max-width: 250px;
+  max-width: 250px;
 }
 .uploadPhotoTxt {
-    margin: 200px;
-    font-family: Roboto;
+  margin: 200px;
+  font-family: Roboto;
+}
+img {
+  height: 350px;
+  width: 250px;
 }

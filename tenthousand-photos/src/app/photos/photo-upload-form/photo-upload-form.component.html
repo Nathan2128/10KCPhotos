@@ -1,17 +1,10 @@
 <section>
-  <form #newPhotoForm="ngForm" fxLayout="column" fxLayoutAlign="center center" (submit)="onUploadPhoto(newPhotoForm)">
-    <mat-form-field>
-      <input
-        matInput
-        name="imagePath"
-        ngModel
-        #imagePath="ngModel"
-        accept="image/*"
-        placeholder="Upload image..."
-        required
-      />
-      <mat-error *ngIf="imagePath.invalid">No photo is uploaded</mat-error>
-    </mat-form-field>
+  <form
+    #newPhotoForm="ngForm"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    (submit)="onUploadPhoto(newPhotoForm)"
+  >
     <mat-form-field>
       <input
         matInput
@@ -24,8 +17,33 @@
       />
       <mat-error *ngIf="caption.invalid">No caption is entered</mat-error>
     </mat-form-field>
-    <button type="submit" mat-raised-button color="primary">
-      Upload photo
+    <div>
+      <button
+        mat-raised-button
+        type="button"
+        (click)="imagePath.click()"
+        color="accent"
+      >
+        Choose Photo
+      </button>
+      <input
+        type="file"
+        hidden
+        ngModel
+        #imagePath
+        name="imagePath"
+        (change)="onPhotoSelected($event)"
+      />
+    </div>
+    <button
+      class="submit-btn"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      fxLayout="column"
+      fxLayoutAlign="end center"
+    >
+      Add photo to collection
     </button>
   </form>
 </section>
