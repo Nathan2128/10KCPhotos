@@ -1,0 +1,27 @@
+<div *ngIf="photos.length; else emptyTpl" fxLayout="row" fxLayoutGap="15px">
+  <mat-card  *ngFor="let photo of photos" class="photo-card">
+    <mat-card-header>
+      <mat-card-title>Ezra's Album</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image [src]="photo?.imagePath" />
+    <mat-card-content>
+      <p>
+        {{ photo?.caption }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button matTooltip="Add picture to favourties"><mat-icon>coffee</mat-icon></button>
+      <button mat-flat-button color="warn">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<app-photo-upload></app-photo-upload>
+
+<ng-template #emptyTpl>
+  <div class="uploadPhotoTxt" fxLayoutAlign="center center">
+    Please upload a photo!
+  </div>
+</ng-template>
