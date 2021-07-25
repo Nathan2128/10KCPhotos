@@ -1,12 +1,31 @@
-<!-- use angular material after -->
 <section>
-    <form
-        fxLayout="column"
-        fxLayoutAlign="center center">
-        <mat-form-field>
-            <input matInput type="text" placeholder="Enter caption..." required>
-        </mat-form-field>
-        <button (click)="onUploadPhoto()" mat-raised-button color="primary">Upload photo</button>
-    </form>
+  <form #newPhotoForm="ngForm" fxLayout="column" fxLayoutAlign="center center" (submit)="onUploadPhoto(newPhotoForm)">
+    <mat-form-field>
+      <input
+        matInput
+        name="imagePath"
+        ngModel
+        #imagePath="ngModel"
+        accept="image/*"
+        placeholder="Upload image..."
+        required
+      />
+      <mat-error *ngIf="imagePath.invalid">No photo is uploaded</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        name="caption"
+        ngModel
+        #caption="ngModel"
+        placeholder="Enter caption..."
+        required
+      />
+      <mat-error *ngIf="caption.invalid">No caption is entered</mat-error>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary">
+      Upload photo
+    </button>
+  </form>
 </section>
-
