@@ -15,7 +15,7 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
   constructor(private photoSvc: PhotoService) {}
 
   ngOnInit() {
-    this.photos = this.photoSvc.getPhotos();
+    this.photoSvc.getPhotos();
     this.photosUpdatedSubscription = this.photoSvc.photoUpdate.subscribe(
       (updatedPhotos: Photo[]) => {
         this.photos = updatedPhotos;
@@ -24,6 +24,6 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-      this.photosUpdatedSubscription.unsubscribe();
+    this.photosUpdatedSubscription.unsubscribe();
   }
 }
