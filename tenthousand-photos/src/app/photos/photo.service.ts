@@ -40,4 +40,10 @@ export class PhotoService {
         this.photoUpdate.next(this.photos.slice());
       });
   }
+
+  deletePhoto(id: string) {
+    this.http.delete('http://localhost:3000/api/photos/' + id).subscribe(() => {
+      this.photoUpdate.next([...this.photos.filter(photo => photo._id !== id)]);
+    })
+  }
 }

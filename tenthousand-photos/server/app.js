@@ -59,7 +59,17 @@ app.post("/api/photos", (req, res, next) => {
   photo.save().then((response) => {
     res.status(201).json({
       message: "post added",
-      newPhotoId: response._id
+      newPhotoId: response._id,
+    });
+  });
+});
+
+app.delete("/api/photos/:id", (req, res, next) => {
+  Photos.deleteOne({
+    _id: req.params.id,
+  }).then((response) => {
+    res.status(204).json({
+      message: "photo has been deleted...",
     });
   });
 });
