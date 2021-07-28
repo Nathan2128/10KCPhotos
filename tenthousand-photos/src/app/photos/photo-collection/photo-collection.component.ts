@@ -23,6 +23,10 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
     );
   }
 
+  onDeletePhoto(id: string) {
+    this.photoSvc.deletePhoto(id);
+  }
+
   ngOnDestroy() {
     this.photosUpdatedSubscription.unsubscribe();
   }

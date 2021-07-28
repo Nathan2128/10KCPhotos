@@ -11,7 +11,7 @@
     </mat-card-content>
     <mat-card-actions>
       <button mat-button matTooltip="Add picture to favourties"><mat-icon>coffee</mat-icon></button>
-      <button mat-flat-button color="warn">
+      <button mat-flat-button color="warn" (click)="onDeletePhoto(photo._id)">
         <mat-icon>delete_outline</mat-icon>
       </button>
     </mat-card-actions>
