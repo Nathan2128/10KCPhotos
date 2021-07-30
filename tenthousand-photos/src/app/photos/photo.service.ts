@@ -11,23 +11,25 @@ export class PhotoService {
 
   constructor(private http: HttpClient) {}
 
-  uploadPhoto(caption: string, imagePath: string) {
-    const newPhoto: Photo = {
-      caption,
-      // imagePath,
-      _id: '',
-    };
+  uploadPhoto(caption: string, photo: File) {
+    //use formData to include file in request
+    const formData: FormData = new FormData();
+    formData.append("caption", caption);
+    formData.append("photo", photo);
+
     this.http
-      .post<{ newPhotoId: string }>(
+      .post<any>(
         'http://localhost:3000/api/photos',
-        newPhoto
+        formData
       )
       .subscribe((res) => {
         console.log(res);
-        this.photos.push({
-          ...newPhoto,
-          _id: res.newPhotoId,
-        });
+        const newPhoto: Photo = {
+          _id: res.photo.id,
+          caption: caption,
+          imagePath: res.photo.imagePath
+        }
+        this.photos.push(newPhoto);
         this.photoUpdate.next(this.photos.slice());
       });
   }
