@@ -1,5 +1,5 @@
 export interface Photo {
   caption: string;
-  // imagePath: string;
+  imagePath: string;
   _id: string;
 }

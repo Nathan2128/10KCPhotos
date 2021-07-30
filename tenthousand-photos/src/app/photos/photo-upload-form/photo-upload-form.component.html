@@ -21,7 +21,7 @@
       <button
         mat-raised-button
         type="button"
-        (click)="imagePath.click()"
+        (click)="photo.click()"
         color="accent"
       >
         Choose Photo
@@ -30,8 +30,8 @@
         type="file"
         hidden
         ngModel
-        #imagePath
-        name="imagePath"
+        #photo
+        name="photo"
         (change)="onPhotoSelected($event)"
       />
     </div>
