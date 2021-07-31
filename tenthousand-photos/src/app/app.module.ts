@@ -19,6 +19,8 @@ import { PhotoUploadComponent } from './photos/photo-upload/photo-upload.compone
 import { NavigationBarComponent } from './nav-bar/nav-bar.component';
 import { PhotoCollectionComponent } from './photos/photo-collection/photo-collection.component';
 import { PhotoService } from './photos/photo.service';
+import { LoginComponent } from './authorization/login/login.component';
+import { SignupComponent } from './authorization/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { PhotoService } from './photos/photo.service';
     PhotoUploadFormComponent,
     NavigationBarComponent,
     PhotoCollectionComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
