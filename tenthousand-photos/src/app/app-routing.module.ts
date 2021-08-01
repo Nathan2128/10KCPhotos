@@ -10,6 +10,7 @@ const appRoutes: Routes = [
   { path: 'photo-upload-form', component: PhotoUploadFormComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
+  { path: 'edit/:id', component: PhotoUploadFormComponent },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],
