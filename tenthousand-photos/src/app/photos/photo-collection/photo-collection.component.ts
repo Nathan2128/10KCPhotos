@@ -20,7 +20,7 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
       (updatedPhotos: any) => {
         this.photos = updatedPhotos.map(photo => {
           return {
-            _id: photo.id,
+            _id: photo._id,
             caption: photo.caption,
             imagePath: photo.photo
           }

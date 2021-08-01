@@ -58,7 +58,7 @@ export class PhotoService {
     if (typeof photo === 'object') {
       //run this if photo is a file
       updatedPhoto = new FormData();
-      updatedPhoto.append('_id', _id)
+      updatedPhoto.append('_id', _id);
       updatedPhoto.append('caption', caption);
       updatedPhoto.append('photo', photo);
     } else {
@@ -76,14 +76,12 @@ export class PhotoService {
         console.log('PUT response', res);
         //update the old posts immutably
         const newPhotos = [...this.photos];
-        const index = newPhotos.findIndex(
-          (photo) => photo._id === _id
-        );
+        const index = newPhotos.findIndex((photo) => photo._id === _id);
         const updatedPhoto = {
           _id,
           caption,
-          imagePath: photo
-        }
+          imagePath: photo,
+        };
         newPhotos[index] = updatedPhoto;
         this.photos = newPhotos;
         this.photoUpdate.next([...this.photos]);
