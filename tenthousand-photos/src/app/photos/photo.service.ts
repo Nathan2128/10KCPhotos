@@ -14,21 +14,18 @@ export class PhotoService {
   uploadPhoto(caption: string, photo: File) {
     //use formData to include file in request
     const formData: FormData = new FormData();
-    formData.append("caption", caption);
-    formData.append("photo", photo);
+    formData.append('caption', caption);
+    formData.append('photo', photo);
 
     this.http
-      .post<any>(
-        'http://localhost:3000/api/photos',
-        formData
-      )
+      .post<any>('http://localhost:3000/api/photos', formData)
       .subscribe((res) => {
         console.log(res);
         const newPhoto: Photo = {
           _id: res.photo.id,
           caption: caption,
-          imagePath: res.photo.imagePath
-        }
+          imagePath: res.photo.imagePath,
+        };
         this.photos.push(newPhoto);
         this.photoUpdate.next(this.photos.slice());
       });
@@ -45,7 +42,51 @@ export class PhotoService {
 
   deletePhoto(id: string) {
     this.http.delete('http://localhost:3000/api/photos/' + id).subscribe(() => {
-      this.photoUpdate.next([...this.photos.filter(photo => photo._id !== id)]);
-    })
+      this.photoUpdate.next([
+        ...this.photos.filter((photo) => photo._id !== id),
+      ]);
+    });
+  }
+
+  //creating this for the edit photo feature
+  getPhoto(id: string) {
+    return { ...this.photos.find((photo) => photo._id === id) };
+  }
+
+  updatePhoto(_id: string, caption: string, photo: File | string) {
+    let updatedPhoto: Photo | FormData;
+    if (typeof photo === 'object') {
+      //run this if photo is a file
+      updatedPhoto = new FormData();
+      updatedPhoto.append('_id', _id)
+      updatedPhoto.append('caption', caption);
+      updatedPhoto.append('photo', photo);
+    } else {
+      //run this if photo is a string
+      updatedPhoto = {
+        _id,
+        caption,
+        imagePath: photo,
+      };
+    }
+
+    this.http
+      .put('http://localhost:3000/api/photos/' + _id, updatedPhoto)
+      .subscribe((res) => {
+        console.log('PUT response', res);
+        //update the old posts immutably
+        const newPhotos = [...this.photos];
+        const index = newPhotos.findIndex(
+          (photo) => photo._id === _id
+        );
+        const updatedPhoto = {
+          _id,
+          caption,
+          imagePath: photo
+        }
+        newPhotos[index] = updatedPhoto;
+        this.photos = newPhotos;
+        this.photoUpdate.next([...this.photos]);
+      });
   }
 }

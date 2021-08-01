@@ -3,14 +3,14 @@
     #newPhotoForm="ngForm"
     fxLayout="column"
     fxLayoutAlign="center center"
-    (submit)="onUploadPhoto(newPhotoForm)"
+    (submit)="onSubmit(newPhotoForm)"
   >
     <mat-form-field>
       <input
         matInput
         type="text"
         name="caption"
-        ngModel
+        [ngModel]="photo?.caption"
         #caption="ngModel"
         placeholder="Enter caption..."
         required
@@ -21,7 +21,7 @@
       <button
         mat-raised-button
         type="button"
-        (click)="photo.click()"
+        (click)="photoSelector.click()"
         color="accent"
       >
         Choose Photo
@@ -30,8 +30,8 @@
         type="file"
         hidden
         ngModel
-        #photo
-        name="photo"
+        #photoSelector
+        name="photoSelector"
         (change)="onPhotoSelected($event)"
       />
     </div>
