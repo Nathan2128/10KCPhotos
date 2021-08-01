@@ -17,8 +17,14 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.photoSvc.getPhotos();
     this.photosUpdatedSubscription = this.photoSvc.photoUpdate.subscribe(
-      (updatedPhotos: Photo[]) => {
-        this.photos = updatedPhotos;
+      (updatedPhotos: any) => {
+        this.photos = updatedPhotos.map(photo => {
+          return {
+            _id: photo._id,
+            caption: photo.caption,
+            imagePath: photo.photo
+          }
+        })
       }
     );
   }
