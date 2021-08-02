@@ -24,20 +24,15 @@ export class PhotoUploadFormComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
-    console.log('this.id', this.id);
-
     this.id ? (this.editMode = true) : (this.editMode = false);
     if (this.editMode) {
       this.photo = this.photoSvc.getPhoto(this.id);
     } else {
       this.photo = null;
     }
-    console.log('this.editmode', this.editMode);
   }
 
   onSubmit(newPhotoForm: NgForm) {
-    console.log('editMode', this.editMode);
-    
     if (this.editMode) {
       this.photoSvc.updatePhoto(
         this.id,
