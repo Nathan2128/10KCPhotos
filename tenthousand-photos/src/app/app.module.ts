@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,6 +24,7 @@ import { LoginComponent } from './authorization/login/login.component';
 import { SignupComponent } from './authorization/signup/signup.component';
 import { AuthorizationService } from './authorization/authorization.service';
 import { AuthorizationInterceptor } from './authorization/authorization.interceptor';
+import { ErrorService } from './shared/error.service';
 
 @NgModule({
   declarations: [
@@ -48,12 +50,18 @@ import { AuthorizationInterceptor } from './authorization/authorization.intercep
     MatCardModule,
     MatTooltipModule,
     FlexLayoutModule,
+    MatSnackBarModule,
   ],
   exports: [MatIconModule, MatButtonModule],
   providers: [
     PhotoService,
     AuthorizationService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor , multi: true},
+    ErrorService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

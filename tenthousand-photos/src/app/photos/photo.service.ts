@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { ErrorService } from '../shared/error.service';
 import { Photo } from './photo.interface';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class PhotoService {
 
   photoUpdate: Subject<Photo[]> = new Subject<Photo[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private errorSvc: ErrorService) {}
 
   uploadPhoto(caption: string, photo: File) {
     //use formData to include file in request
@@ -27,6 +28,10 @@ export class PhotoService {
         };
         this.photos.push(newPhoto);
         this.photoUpdate.next(this.photos.slice());
+      }, error => {
+        if(error.status === 415){
+          this.errorSvc.showSnackbar(error.error.error, null, 3000);
+        }
       });
   }
 
