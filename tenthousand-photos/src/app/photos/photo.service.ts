@@ -20,7 +20,6 @@ export class PhotoService {
     this.http
       .post<any>('http://localhost:3000/api/photos', formData)
       .subscribe((res) => {
-        console.log(res);
         const newPhoto: Photo = {
           _id: res.photo.id,
           caption: caption,
@@ -73,7 +72,6 @@ export class PhotoService {
     this.http
       .put('http://localhost:3000/api/photos/' + _id, updatedPhoto)
       .subscribe((res) => {
-        console.log('PUT response', res);
         //update the old posts immutably
         const newPhotos = [...this.photos];
         const index = newPhotos.findIndex((photo) => photo._id === _id);

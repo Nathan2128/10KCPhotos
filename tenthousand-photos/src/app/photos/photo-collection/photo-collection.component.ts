@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AuthorizationService } from '../../authorization/authorization.service';
 import { Photo } from '../photo.interface';
 import { PhotoService } from '../photo.service';
 
@@ -10,23 +11,34 @@ import { PhotoService } from '../photo.service';
 })
 export class PhotoCollectionComponent implements OnInit, OnDestroy {
   photos: Photo[] = [];
-  photosUpdatedSubscription!: Subscription;
+  photosUpdatedSubscription: Subscription;
+  isAuth: boolean = false;
+  private isAuthSubscription: Subscription;
 
-  constructor(private photoSvc: PhotoService) {}
+  constructor(
+    private authSvc: AuthorizationService,
+    private photoSvc: PhotoService
+  ) {}
 
   ngOnInit() {
     this.photoSvc.getPhotos();
     this.photosUpdatedSubscription = this.photoSvc.photoUpdate.subscribe(
       (updatedPhotos: any) => {
-        this.photos = updatedPhotos.map(photo => {
+        this.photos = updatedPhotos.map((photo) => {
           return {
             _id: photo._id,
             caption: photo.caption,
-            imagePath: photo.photo
-          }
-        })
+            imagePath: photo.photo,
+          };
+        });
       }
     );
+    this.isAuth = this.authSvc.getAuthFlag(); //added this logic to avoid a bug
+    this.isAuthSubscription = this.authSvc
+      .getIsAuthenticated()
+      .subscribe((res: boolean) => {
+        this.isAuth = res;
+      });
   }
 
   onDeletePhoto(id: string) {
@@ -35,5 +47,6 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.photosUpdatedSubscription.unsubscribe();
+    this.isAuthSubscription.unsubscribe();
   }
 }

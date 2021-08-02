@@ -1,1 +1,40 @@
-<h1>login component</h1>
+<section>
+  <form #loginForm="ngForm" fxLayout="column" fxLayoutAlign="center center" (submit)="onSubmit(loginForm)">
+    <mat-form-field>
+      <input
+        matInput
+        type="email"
+        #email="ngModel"
+        ngModel
+        name="email"
+        placeholder="Enter email..."
+        required
+        email
+      />
+      <mat-error *ngIf="email.invalid">Email entered is not valid</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="password"
+        #password="ngModel"
+        ngModel
+        name="password"
+        placeholder="Enter password..."
+        required
+        minlength="6"
+      />
+      <mat-error *ngIf="password.invalid">Password entered is not valid</mat-error>
+    </mat-form-field>
+    <button
+      class="submit-btn"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      fxLayout="column"
+      fxLayoutAlign="end center"
+    >
+      Login
+    </button>
+  </form>
+</section>

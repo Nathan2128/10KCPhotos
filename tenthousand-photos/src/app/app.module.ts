@@ -10,7 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,8 @@ import { PhotoCollectionComponent } from './photos/photo-collection/photo-collec
 import { PhotoService } from './photos/photo.service';
 import { LoginComponent } from './authorization/login/login.component';
 import { SignupComponent } from './authorization/signup/signup.component';
+import { AuthorizationService } from './authorization/authorization.service';
+import { AuthorizationInterceptor } from './authorization/authorization.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,7 @@ import { SignupComponent } from './authorization/signup/signup.component';
     NavigationBarComponent,
     PhotoCollectionComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,11 @@ import { SignupComponent } from './authorization/signup/signup.component';
     FlexLayoutModule,
   ],
   exports: [MatIconModule, MatButtonModule],
-  providers: [PhotoService],
+  providers: [
+    PhotoService,
+    AuthorizationService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor , multi: true},
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

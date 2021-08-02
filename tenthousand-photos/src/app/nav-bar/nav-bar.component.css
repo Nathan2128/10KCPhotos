@@ -1,8 +1,12 @@
 a {
   text-decoration: none;
-  color: blueviolet;
+  color: rgb(70, 105, 172);
 }
 
 ul {
   list-style: none;
+}
+
+.app-icon {
+  font-size: 1.2em;
 }
