@@ -36,6 +36,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype == "image/png" ||
+      file.mimetype == "image/jpg" ||
+      file.mimetype == "image/jpeg"
+    ) {
+      cb(null, true);
+    } else {
+      cb(null, true);
+      req.fileValidationError = "Not a valid file type!";
+    }
+  },
 }).single("photo");
 
 app.use((req, res, next) => {
@@ -67,6 +79,9 @@ app.get("/api/photos", (req, res, next) => {
 });
 
 app.post("/api/photos", authToken, upload, (req, res, next) => {
+  if (req.fileValidationError) {
+    return res.status(415).json({ error: req.fileValidationError });
+  }
   const url = req.protocol + "://" + req.get("host");
   const photo = new Photos({
     caption: req.body.caption,
@@ -106,10 +121,13 @@ app.put("/api/photos/:id", authToken, upload, (req, res, next) => {
     photo
   ).then((response) => {
     // console.log("put response", response);
-    if(response.nModified > 0) { //update has taken place
-      res.status(200).json({ message: "photo has been updated..."})
+    if (response.nModified > 0) {
+      //update has taken place
+      res.status(200).json({ message: "photo has been updated..." });
     } else {
-      res.status(401).json({ message: "this user can not perform this action..."})
+      res
+        .status(401)
+        .json({ message: "this user can not perform this action..." });
     }
   });
 });
@@ -117,12 +135,15 @@ app.put("/api/photos/:id", authToken, upload, (req, res, next) => {
 app.delete("/api/photos/:id", authToken, (req, res, next) => {
   Photos.deleteOne({
     _id: req.params.id,
-    createdBy: req.userData.userId
+    createdBy: req.userData.userId,
   }).then((response) => {
-    if(response.n > 0) { //update has taken place
-      res.status(200).json({ message: "photo has been updated..."})
+    if (response.n > 0) {
+      //update has taken place
+      res.status(200).json({ message: "photo has been updated..." });
     } else {
-      res.status(401).json({ message: "this user can not perform this action..."})
+      res
+        .status(401)
+        .json({ message: "this user can not perform this action..." });
     }
   });
 });

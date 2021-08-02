@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { ErrorService } from '../shared/error.service';
 import { Authorization } from './authorization.interface';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class AuthorizationService {
   private isAuthenticatedSubject = new Subject<boolean>();
   private tokenExpiredTimer;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private errorSvc: ErrorService) {}
 
   addUser(email: string, password: string) {
     const authReq: Authorization = {
@@ -22,6 +23,10 @@ export class AuthorizationService {
       .post('http://localhost:3000/api/users/register', authReq)
       .subscribe((res) => {
         console.log('addUser response', res);
+      }, error => {
+        if(error.status === 409) {
+          this.errorSvc.showSnackbar("User already exists!", null, 3000);
+        }
       });
   }
 
@@ -50,6 +55,10 @@ export class AuthorizationService {
 
           this.storeTokenLocalStorage(this.authToken, expirationTime);
           this.router.navigate(['/']);
+        }
+      }, error => {
+        if(error.status = 401){ 
+          this.errorSvc.showSnackbar(error.error.message, null, 3000);
         }
       });
   }
