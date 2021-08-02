@@ -14,7 +14,7 @@ export class NavigationBarComponent implements OnInit, OnDestroy {
   constructor(private authSvc: AuthorizationService) {}
 
   ngOnInit() {
-    // this.isAuth = this.authSvc.getIsAuthenticated();
+    this.isAuth = this.authSvc.getAuthFlag();
     this.isAuthSubscription = this.authSvc
       .getIsAuthenticated()
       .subscribe((res) => {

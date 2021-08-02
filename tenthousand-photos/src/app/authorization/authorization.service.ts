@@ -38,18 +38,17 @@ export class AuthorizationService {
         if (this.authToken) {
           this.isAuth = true;
           this.isAuthenticatedSubject.next(true);
-          const timeExpires = res.expiresIn;
-          this.tokenExpiredTimer = setTimeout(() => {
-            this.logout();
-          }, timeExpires * 1000);
+          const timeExpires = res.expiresIn; //in seconds from the back end
+          this.startTokenTimer(timeExpires);
           console.log('timeExpires', timeExpires);
           const currentTime = new Date();
+          //create a date object for when the token will expire
           const expirationTime = new Date(
-            currentTime.getTime() + timeExpires * 1000
+            currentTime.getTime() + timeExpires * 1000 // convert to millisec
           );
           console.log('expirationTime', expirationTime);
 
-          this.storeLocalStorageToken(this.authToken, expirationTime);
+          this.storeTokenLocalStorage(this.authToken, expirationTime);
           this.router.navigate(['/']);
         }
       });
@@ -72,47 +71,50 @@ export class AuthorizationService {
     this.isAuth = false;
     this.isAuthenticatedSubject.next(false);
     clearTimeout(this.tokenExpiredTimer);
-    this.clearLocalStorageToken();
+    this.clearTokenLocalStorage();
     this.router.navigate(['/']);
   }
 
   //add logic to make sure that token is stored in localStorage when valid
-  storeLocalStorageToken(token: string, expiration: Date) {
+  storeTokenLocalStorage(token: string, expiration: Date) {
     localStorage.setItem('token', token);
     localStorage.setItem('expiration', expiration.toISOString());
   }
 
-  clearLocalStorageToken() {
-    localStorage.clear();
+  clearTokenLocalStorage() {
+    localStorage.clear(); //use remove item instead if this causes bugs
   }
 
-  //authenticate user if token in local storage is still valid
-  //need this for when a user reloads the page
-  // validateUser() {
-  //   const existingToken: any = this.getLocalToken();
-  //   const now = new Date();
-  //   const isTokenExpired: any =
-  //     existingToken.expiration.getTime() - now.getTime();
-  //   if (isTokenExpired > 0) {
-  //     this.authToken = existingToken.token;
-  //     this.isAuth = true;
-  //     this.tokenExpiredTimer = setTimeout(() => {
-  //       this.logout();
-  //     }, isTokenExpired / 1000);
-  //     this.isAuthenticatedSubject.next(true);
-  //   }
-  // }
+  // authenticate user if token in local storage is still valid
+  // need this for when a user reloads the page
+  //check is existing token in local storage is expired or not
+  validateUser() {
+    const existingToken: any = this.getTokenLocalStorage();
+    const now = new Date();
+    const timeRemaining: any =
+      existingToken?.expiration.getTime() - now.getTime(); //calculatime time left on token
+    if (timeRemaining > 0) {
+      this.authToken = existingToken.token;
+      this.isAuth = true;
+      this.startTokenTimer(timeRemaining / 1000); //convert to seconds
+      this.isAuthenticatedSubject.next(true);
+    }
+  }
 
   //check if items exist in local storage that can authenticate the user
-  // getLocalToken() {
-  //   const token = localStorage.getItem('token');
-  //   const expiration = localStorage.getItem('expiration');
-  //   if (!token || !expiration) {
-  //     return;
-  //   }
-  //   return {
-  //     token,
-  //     expiration: new Date(expiration),
-  //   };
-  // }
+  getTokenLocalStorage() {
+    const token = localStorage.getItem('token');
+    const expiration = localStorage.getItem('expiration');
+    return {
+      token: token,
+      expiration: new Date(expiration),
+    };
+  }
+
+  startTokenTimer(timeLeft: number) {
+    //value is in seconds
+    this.tokenExpiredTimer = setTimeout(() => {
+      this.logout();
+    }, timeLeft * 1000);
+  }
 }
