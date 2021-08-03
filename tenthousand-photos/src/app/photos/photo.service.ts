@@ -92,6 +92,11 @@ export class PhotoService {
         newPhotos[index] = updatedPhoto;
         this.photos = newPhotos;
         this.photoUpdate.next([...this.photos]);
+      }, error => {
+        if (error.status === 401) {
+          this.errorSvc.showSnackbar(error.error.message, null, 3000);
+          this.router.navigate(['']);
+        }
       });
   }
 }
