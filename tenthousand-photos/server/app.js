@@ -158,10 +158,15 @@ app.post("/api/users/register", (req, res, next) => {
     user
       .save()
       .then((response) => {
-        res.status(201).json({
-          message: "User has been created...",
-          user: response,
-        });
+        const token = jwt.sign(
+          { email: user.email, userId: user._id },
+          "10KC_secret",
+          { expiresIn: "2h" }
+        );
+        res.status(200).json({
+          token,
+          expiresIn: "7200",
+        })
       })
       .catch((error) => {
         res.status(409).json({
