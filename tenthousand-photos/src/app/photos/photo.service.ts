@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ErrorService } from '../shared/error.service';
 import { Photo } from './photo.interface';
@@ -10,7 +11,11 @@ export class PhotoService {
 
   photoUpdate: Subject<Photo[]> = new Subject<Photo[]>();
 
-  constructor(private http: HttpClient, private errorSvc: ErrorService) {}
+  constructor(
+    private http: HttpClient,
+    private errorSvc: ErrorService,
+    private router: Router
+  ) {}
 
   uploadPhoto(caption: string, photo: File) {
     //use formData to include file in request
@@ -18,9 +23,8 @@ export class PhotoService {
     formData.append('caption', caption);
     formData.append('photo', photo);
 
-    this.http
-      .post<any>('http://localhost:3000/api/photos', formData)
-      .subscribe((res) => {
+    this.http.post<any>('http://localhost:3000/api/photos', formData).subscribe(
+      (res) => {
         const newPhoto: Photo = {
           _id: res.photo.id,
           caption: caption,
@@ -28,11 +32,15 @@ export class PhotoService {
         };
         this.photos.push(newPhoto);
         this.photoUpdate.next(this.photos.slice());
-      }, error => {
-        if(error.status === 415){
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        if (error.status === 415) {
           this.errorSvc.showSnackbar(error.error.error, null, 3000);
+          this.router.navigate(['/']);
         }
-      });
+      }
+    );
   }
 
   getPhotos() {
@@ -45,11 +53,7 @@ export class PhotoService {
   }
 
   deletePhoto(id: string) {
-    this.http.delete('http://localhost:3000/api/photos/' + id).subscribe(() => {
-      this.photoUpdate.next([
-        ...this.photos.filter((photo) => photo._id !== id),
-      ]);
-    });
+    return this.http.delete('http://localhost:3000/api/photos/'+ id);
   }
 
   //creating this for the edit photo feature

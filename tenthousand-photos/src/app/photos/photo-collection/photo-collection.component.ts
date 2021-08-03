@@ -42,7 +42,9 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
   }
 
   onDeletePhoto(id: string) {
-    this.photoSvc.deletePhoto(id);
+    this.photoSvc.deletePhoto(id).subscribe(() => {
+      this.photos = [...this.photos.filter((photo) => photo._id !== id)]
+    })
   }
 
   ngOnDestroy() {

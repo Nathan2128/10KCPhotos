@@ -42,9 +42,6 @@ export class PhotoUploadFormComponent implements OnInit {
     } else {
       this.photoSvc.uploadPhoto(newPhotoForm.value.caption, this.imageFile);
     }
-
-    //navigate back to PhotoCollectionComponent after uploading a new photo
-    this.router.navigate(['']);
   }
 
   onPhotoSelected(event: any) {
