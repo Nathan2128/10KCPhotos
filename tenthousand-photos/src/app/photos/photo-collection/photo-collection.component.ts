@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ErrorService } from 'src/app/shared/error.service';
 import { AuthorizationService } from '../../authorization/authorization.service';
 import { Photo } from '../photo.interface';
 import { PhotoService } from '../photo.service';
@@ -17,7 +18,8 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
 
   constructor(
     private authSvc: AuthorizationService,
-    private photoSvc: PhotoService
+    private photoSvc: PhotoService,
+    private errorSvc: ErrorService
   ) {}
 
   ngOnInit() {
@@ -44,6 +46,10 @@ export class PhotoCollectionComponent implements OnInit, OnDestroy {
   onDeletePhoto(id: string) {
     this.photoSvc.deletePhoto(id).subscribe(() => {
       this.photos = [...this.photos.filter((photo) => photo._id !== id)]
+    }, error => {
+      if (error.status === 401) {
+        this.errorSvc.showSnackbar(error.error.message, null, 3000);
+      }
     })
   }
 
