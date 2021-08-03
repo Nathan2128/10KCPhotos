@@ -12,7 +12,11 @@ export class AuthorizationService {
   private isAuthenticatedSubject = new Subject<boolean>();
   private tokenExpiredTimer;
 
-  constructor(private http: HttpClient, private router: Router, private errorSvc: ErrorService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private errorSvc: ErrorService
+  ) {}
 
   addUser(email: string, password: string) {
     const authReq: Authorization = {
@@ -21,13 +25,33 @@ export class AuthorizationService {
     };
     this.http
       .post('http://localhost:3000/api/users/register', authReq)
-      .subscribe((res) => {
-        console.log('addUser response', res);
-      }, error => {
-        if(error.status === 409) {
-          this.errorSvc.showSnackbar("User already exists!", null, 3000);
+      .subscribe(
+        (res: any) => {
+          this.authToken = res.token;
+          // check if we do have a valid token first to set auth flags
+          if (this.authToken) {
+            this.isAuth = true;
+            this.isAuthenticatedSubject.next(true);
+            const timeExpires = res.expiresIn; //in seconds from the back end
+            this.startTokenTimer(timeExpires);
+            console.log('timeExpires', timeExpires);
+            const currentTime = new Date();
+            //create a date object for when the token will expire
+            const expirationTime = new Date(
+              currentTime.getTime() + timeExpires * 1000 // convert to millisec
+            );
+            console.log('expirationTime', expirationTime);
+
+            this.storeTokenLocalStorage(this.authToken, expirationTime);
+            this.router.navigate(['/']);
+          }
+        },
+        (error) => {
+          if (error.status === 409) {
+            this.errorSvc.showSnackbar('User already exists!', null, 3000);
+          }
         }
-      });
+      );
   }
 
   login(email: string, password: string) {
@@ -35,9 +59,8 @@ export class AuthorizationService {
       email,
       password,
     };
-    this.http
-      .post('http://localhost:3000/api/users/login', authReq)
-      .subscribe((res: any) => {
+    this.http.post('http://localhost:3000/api/users/login', authReq).subscribe(
+      (res: any) => {
         this.authToken = res.token;
         // check if we do have a valid token first to set auth flags
         if (this.authToken) {
@@ -56,11 +79,13 @@ export class AuthorizationService {
           this.storeTokenLocalStorage(this.authToken, expirationTime);
           this.router.navigate(['/']);
         }
-      }, error => {
-        if(error.status = 401){ 
+      },
+      (error) => {
+        if ((error.status = 401)) {
           this.errorSvc.showSnackbar(error.error.message, null, 3000);
         }
-      });
+      }
+    );
   }
 
   getToken(): string {
