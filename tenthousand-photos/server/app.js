@@ -139,7 +139,7 @@ app.delete("/api/photos/:id", authToken, (req, res, next) => {
   }).then((response) => {
     if (response.n > 0) {
       //update has taken place
-      res.status(200).json({ message: "photo has been updated..." });
+      res.status(200).json({ message: "photo has been deleted..." });
     } else {
       res
         .status(401)
