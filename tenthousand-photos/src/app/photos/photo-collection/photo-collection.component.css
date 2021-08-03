@@ -1,5 +1,6 @@
 .photo-card {
   max-width: 250px;
+  margin: 15px;
 }
 .uploadPhotoTxt {
   margin: 200px;
@@ -8,4 +9,8 @@
 img {
   height: 350px;
   width: 250px;
+}
+
+.photo-container {
+  flex-wrap: wrap;
 }

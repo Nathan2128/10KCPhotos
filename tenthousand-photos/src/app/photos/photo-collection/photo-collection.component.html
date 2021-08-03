@@ -1,4 +1,4 @@
-<div *ngIf="photos.length; else emptyTpl" fxLayout="row" fxLayoutGap="15px">
+<div *ngIf="photos.length; else emptyTpl" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start start"  class="photo-container">
   <mat-card  *ngFor="let photo of photos" class="photo-card">
     <mat-card-header>
       <mat-card-title></mat-card-title>
